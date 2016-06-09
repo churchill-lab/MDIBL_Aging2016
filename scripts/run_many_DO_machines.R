@@ -3,7 +3,7 @@ library(parallel)
 library(doParallel)
 Sys.setenv(DO_PAT = "*** REPLACE THIS BY YOUR DIGITAL OCEAN API KEY ***")
 
-participants <- read.csv("participant_list_ibangs.csv", as.is=TRUE)
+participants <- read.csv("participant_list_mdibl_aging2016.csv", as.is=TRUE)
 N = nrow(participants)
 
 # create a droplet for each participant
@@ -55,11 +55,11 @@ for(i in 1:N) {
   d = droplet_list[[i]]
   
   d %>% docklet_run("-d", " -v /ibangs/data:/ibangs/data", " -v /ibangs/tutorial:/ibangs/tutorial", " -p 8787:8787", 
-                    " -e USER=rstudio", " -e PASSWORD=ibangs ", "--name myrstudio ", "churchill/ibangs2016")
+                    " -e USER=rstudio", " -e PASSWORD=mdibl ", "--name myrstudio ", "churchill/ibangs2016")
 
   # add symbolic links
-  lines2 <- "docker exec myrstudio ln -s /ibangs/data /home/rstudio/data
-             docker exec myrstudio ln -s /ibangs/tutorial /home/rstudio/tutorial"
+  lines2 <- "docker exec myrstudio ln -s /data /home/rstudio/data
+             docker exec myrstudio ln -s /tutorial /home/rstudio/tutorial"
   cmd2 <- paste0("ssh ", analogsea:::ssh_options(), " ", "root", "@", analogsea:::droplet_ip(d)," ", shQuote(lines2))
   analogsea:::do_system(d, cmd2, verbose = TRUE)  
 }
