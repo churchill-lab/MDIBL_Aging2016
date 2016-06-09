@@ -18,7 +18,7 @@ analogsea:::do_system(d, cmd, verbose = TRUE)
 
 # start the containers
 d %>% docklet_run("-d", " -v /data:/data", " -v /tutorial:/tutorial", " -p 8787:8787", 
-                  " -e USER=rstudio", " -e PASSWORD=mdibl ", "--name myrstudio ", "churchill/mdibl2016")
+                  " -e USER=rstudio", " -e PASSWORD=mdibl ", "--name myrstudio ", "churchill/ibangs2016")
 
 # add symbolic links
 lines2 <- "docker exec myrstudio ln -s /data /home/rstudio/data
