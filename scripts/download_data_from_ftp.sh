@@ -15,6 +15,6 @@ wget --directory-prefix=/tutorial ftp://ftp.jax.org/dgatti/MDIBL_Aging2016/markd
 wget --directory-prefix=/tutorial ftp://ftp.jax.org/dgatti/MDIBL_Aging2016/markdown/DOQTL_workshop_MDIBL_Aging2016.html
 wget --directory-prefix=/tutorial ftp://ftp.jax.org/dgatti/MDIBL_Aging2016/markdown/DOQTL_workshop_MDIBL_Aging2016.R
 
-
 # set privilages - everybody can do everything
-chmod --recursive 777 /ibangs
+chmod --recursive 777 /data
+chmod --recursive 777 /tutorial
