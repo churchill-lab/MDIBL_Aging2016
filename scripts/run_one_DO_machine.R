@@ -26,5 +26,11 @@ lines2 <- "docker exec myrstudio ln -s /data /home/rstudio/data
 cmd2 <- paste0("ssh ", analogsea:::ssh_options(), " ", "root", "@", analogsea:::droplet_ip(d)," ", shQuote(lines2))
 analogsea:::do_system(d, cmd2, verbose = TRUE)
 
+# Make a snapshot of this machine.
+d %>%
+  droplet_power_off() %>%
+  droplet_wait() %>%
+  droplet_snapshot(name = "churchill/mdibl2016")
+
 # kill droplet
 # droplet_delete(d)
