@@ -22,7 +22,7 @@ d %>% docklet_run("-d", " -v /data:/data", " -v /tutorial:/tutorial", " -p 8787:
 
 # add symbolic links
 lines2 <- "docker exec myrstudio ln -s /data /home/rstudio/data
-           docker exec myrstudio ln -s tutorial /home/rstudio/tutorial"
+           docker exec myrstudio ln -s /tutorial /home/rstudio/tutorial"
 cmd2 <- paste0("ssh ", analogsea:::ssh_options(), " ", "root", "@", analogsea:::droplet_ip(d)," ", shQuote(lines2))
 analogsea:::do_system(d, cmd2, verbose = TRUE)
 
