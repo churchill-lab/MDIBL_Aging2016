@@ -13,8 +13,11 @@ droplet_list <- list()
 for(i in 1:N) {
   print(i)
   # start i-th machine
-  droplet_list[[i]] <- docklet_create(size = getOption("do_size", "8gb"), 
-                                      region = getOption("do_region", "nyc2"))
+#  droplet_list[[i]] <- docklet_create(size = getOption("do_size", "8gb"), 
+#                                      region = getOption("do_region", "nyc2"))
+  droplet_list[[i]] <- droplet_create(size = getOption("do_size", "8gb"), 
+                                      region = getOption("do_region", "nyc2"),
+                                      image = getOption("do_image", "churchill/mdibl2016"))
 }
 
 cl <- makeCluster(N)
