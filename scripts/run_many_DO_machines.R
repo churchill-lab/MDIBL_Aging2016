@@ -28,25 +28,26 @@ foreach(i = 1:N, .packages="analogsea") %dopar% {
   d = droplet_list[[i]]
   
   # pull docker images
-  d %>% docklet_pull("rocker/hadleyverse")
-  d %>% docklet_pull("churchill/ibangs2016")
+#  d %>% docklet_pull("rocker/hadleyverse")
+#  d %>% docklet_pull("churchill/ibangs2016")
+  d %>% docklet_pull("churchill/mdibl2016")
   d %>% docklet_images()
 }
 
 # download files to /data folder, takes ~1 hour
-foreach(i = 1:N, .packages="analogsea") %dopar% {
+#foreach(i = 1:N, .packages="analogsea") %dopar% {
   
   # select droplet
-  d = droplet_list[[i]]
+#  d = droplet_list[[i]]
   
-  lines <- "wget https://raw.githubusercontent.com/churchill-lab/IBANGS2016/master/scripts/download_data_from_ftp.sh
-            /bin/bash download_data_from_ftp.sh
-            rm download_data_from_ftp.sh"
-  cmd <- paste0("ssh ", analogsea:::ssh_options(), " ", "root", "@", analogsea:::droplet_ip(d)," ", shQuote(lines))
-  analogsea:::do_system(d, cmd, verbose = TRUE)
-}
+#  lines <- "wget https://raw.githubusercontent.com/churchill-lab/IBANGS2016/master/scripts/download_data_from_ftp.sh
+#            /bin/bash download_data_from_ftp.sh
+#            rm download_data_from_ftp.sh"
+#  cmd <- paste0("ssh ", analogsea:::ssh_options(), " ", "root", "@", analogsea:::droplet_ip(d)," ", shQuote(lines))
+#  analogsea:::do_system(d, cmd, verbose = TRUE)
+#}
 
-stopCluster(cl)
+#stopCluster(cl)
 
 # start docker containers
 for(i in 1:N) {
@@ -54,8 +55,8 @@ for(i in 1:N) {
   # select droplet
   d = droplet_list[[i]]
   
-  d %>% docklet_run("-d", " -v /ibangs/data:/ibangs/data", " -v /ibangs/tutorial:/ibangs/tutorial", " -p 8787:8787", 
-                    " -e USER=rstudio", " -e PASSWORD=mdibl ", "--name myrstudio ", "churchill/ibangs2016")
+  d %>% docklet_run("-d", " -v /data:/data", " -v /tutorial:/tutorial", " -p 8787:8787", 
+                    " -e USER=rstudio", " -e PASSWORD=mdibl ", "--name myrstudio ", "churchill/mdibl2016")
 
   # add symbolic links
   lines2 <- "docker exec myrstudio ln -s /data /home/rstudio/data
