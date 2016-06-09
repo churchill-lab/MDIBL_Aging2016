@@ -16,6 +16,7 @@ wget --directory-prefix=/tutorial ftp://ftp.jax.org/dgatti/MDIBL_Aging2016/DOQTL
 wget --directory-prefix=/tutorial ftp://ftp.jax.org/dgatti/MDIBL_Aging2016/DOQTL_demo.R
 
 # Copy figures.
+wget --directory-prefix=/tutorial/figure ftp://ftp.jax.org/dgatti/MDIBL_Aging2016/figure/benzene_hypothesis.png
 wget --directory-prefix=/tutorial/figure ftp://ftp.jax.org/dgatti/MDIBL_Aging2016/figure/benzene_study_design.png
 wget --directory-prefix=/tutorial/figure ftp://ftp.jax.org/dgatti/MDIBL_Aging2016/figure/DO.impute.founders.sm.png
 wget --directory-prefix=/tutorial/figure ftp://ftp.jax.org/dgatti/MDIBL_Aging2016/figure/EnsEMBL.Sult3a1.png
