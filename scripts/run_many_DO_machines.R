@@ -17,7 +17,9 @@ N = nrow(participants)
 
 # Trying new command to make multiple machines at once.
 img = images(private = TRUE)[["churchill/mdibl2016"]]
-droplet_list = droplets_create(names = participants[11:20,1], size = "8gb", image = img[["id"]],
+# NOTE: You may get an error if you create more than 10 machines.  Just make
+#       multiple calls to this function and stack up the droplets.
+droplet_list = droplets_create(names = participants[,1], size = "8gb", image = img[["id"]],
                                region = "nyc2")
 
 # start docker containers
