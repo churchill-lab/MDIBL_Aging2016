@@ -1,6 +1,10 @@
 library(analogsea)
 library(parallel)
 library(doParallel)
+library(devtools)
+# I needed this in June 2016 to get droplets_create().
+install_github("sckott/analosea")
+
 Sys.setenv(DO_PAT = "*** REPLACE THIS BY YOUR DIGITAL OCEAN API KEY ***")
 
 participants <- read.csv("participant_list_mdibl_aging2016.csv", as.is=TRUE)
@@ -13,14 +17,14 @@ N = nrow(participants)
 
 # Trying new command to make multiple machines at once.
 img = images(private = TRUE)[["churchill/mdibl2016"]]
-droplet_list = droplets_create(names = paste0("Machine", 1:20), size = "8gb", image = img[["id"]],
+droplet_list = droplets_create(names = participants[11:20,1], size = "8gb", image = img[["id"]],
                                region = "nyc2")
 
 # start docker containers
 for(i in 1:N) {
   print(i)
   # select droplet
-  d = droplet_list[[i]]
+  d = droplet(droplet_list[[i]]$id)
   
   # start the container.
   d %>% docklet_run("-d", " -v /data:/data", " -v /tutorial:/tutorial", " -p 8787:8787", 
@@ -73,3 +77,9 @@ for (i in 1:N) {
             authenticate = TRUE,
             send = TRUE)
 }
+
+# Loop to kill all machines.
+#for(i in 1:N) {
+#  d = droplet(droplet_list[[i]]$id)
+#  droplet_delete(d)
+#} # for(i)
