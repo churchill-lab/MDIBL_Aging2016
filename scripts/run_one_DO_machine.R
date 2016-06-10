@@ -16,6 +16,12 @@ lines <- "wget https://raw.githubusercontent.com/churchill-lab/MDIBL_Aging2016/m
 cmd <- paste0("ssh ", analogsea:::ssh_options(), " ", "root", "@", analogsea:::droplet_ip(d)," ", shQuote(lines))
 analogsea:::do_system(d, cmd, verbose = TRUE)
 
+# Make a snapshot of this machine.
+d %>%
+  droplet_power_off() %>%
+  droplet_wait() %>%
+  droplet_snapshot(name = "churchill/mdibl2016")
+
 # start the containers
 d %>% docklet_run("-d", " -v /data:/data", " -v /tutorial:/tutorial", " -p 8787:8787", 
                   " -e USER=rstudio", " -e PASSWORD=mdibl ", "--name myrstudio ", "churchill/ibangs2016")
@@ -25,12 +31,6 @@ lines2 <- "docker exec myrstudio ln -s /data /home/rstudio/data
            docker exec myrstudio ln -s /tutorial /home/rstudio/tutorial"
 cmd2 <- paste0("ssh ", analogsea:::ssh_options(), " ", "root", "@", analogsea:::droplet_ip(d)," ", shQuote(lines2))
 analogsea:::do_system(d, cmd2, verbose = TRUE)
-
-# Make a snapshot of this machine.
-d %>%
-  droplet_power_off() %>%
-  droplet_wait() %>%
-  droplet_snapshot(name = "churchill/mdibl2016")
 
 # kill droplet
 # droplet_delete(d)
