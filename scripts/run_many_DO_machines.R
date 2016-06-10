@@ -6,6 +6,16 @@ Sys.setenv(DO_PAT = "*** REPLACE THIS BY YOUR DIGITAL OCEAN API KEY ***")
 participants <- read.csv("participant_list_mdibl_aging2016.csv", as.is=TRUE)
 N = nrow(participants)
 
+# Single machine.
+img = images(private = TRUE)[["churchill/mdibl2016"]]
+d = droplet_create(name = "droplet1", size = "8gb", image = img[["id"]],
+                   region = "nyc2")
+
+# Trying new command to make multiple machines at once.
+img = images(private = TRUE)[["churchill/mdibl2016"]]
+droplet.list = droplets_create(names = paste0("Machine", 1:20), size = "8gb", image = img[["id"]],
+                               region = "nyc2")
+
 # create a droplet for each participant
 droplet_list <- list()
 
