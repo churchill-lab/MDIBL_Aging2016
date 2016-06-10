@@ -22,7 +22,16 @@ d %>%
   droplet_wait() %>%
   droplet_snapshot(name = "churchill/mdibl2016")
 
-# start the containers
+# Destroy the source droplet to see if we can re-make it using the image.
+droplet_delete(d)
+rm(d)
+
+# Run the one machine.
+img = images(private = TRUE)[["churchill/mdibl2016"]]
+d = droplet_create(name = "droplet1", size = "8gb", image = img[["id"]],
+                   region = "nyc2")
+
+# start the container.
 d %>% docklet_run("-d", " -v /data:/data", " -v /tutorial:/tutorial", " -p 8787:8787", 
                   " -e USER=rstudio", " -e PASSWORD=mdibl ", "--name myrstudio ", "churchill/ibangs2016")
 
