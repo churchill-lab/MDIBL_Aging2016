@@ -9,6 +9,9 @@ d %>% docklet_pull("rocker/hadleyverse")
 d %>% docklet_pull("churchill/ibangs2016")
 d %>% docklet_images()
 
+# Needed to add this to update the IP address. OTherwise, I got a "network not up yet" error.
+d = droplet(d$id)
+
 # download files to /data folder, takes ~30mins
 lines <- "wget https://raw.githubusercontent.com/churchill-lab/MDIBL_Aging2016/master/scripts/download_data_from_ftp.sh
           /bin/bash download_data_from_ftp.sh
@@ -30,6 +33,9 @@ rm(d)
 img = images(private = TRUE)[["churchill/mdibl2016"]]
 d = droplet_create(name = "droplet1", size = "8gb", image = img[["id"]],
                    region = "nyc2")
+
+# Needed to add this to update the IP address. OTherwise, I got a "network not up yet" error.
+d = droplet(d$id)
 
 # start the container.
 d %>% docklet_run("-d", " -v /data:/data", " -v /tutorial:/tutorial", " -p 8787:8787", 
