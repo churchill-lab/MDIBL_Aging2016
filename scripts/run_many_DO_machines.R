@@ -1,13 +1,14 @@
-library(analogsea)
+#library(analogsea)
 library(parallel)
 library(doParallel)
 library(devtools)
 # I needed this in June 2016 to get droplets_create().
-install_github("sckott/analosea")
+install_github("sckott/analogsea")
+library(analogsea)
 
 Sys.setenv(DO_PAT = "*** REPLACE THIS BY YOUR DIGITAL OCEAN API KEY ***")
 
-participants <- read.csv("participant_list_mdibl_aging2016.csv", as.is=TRUE)
+participants <- read.csv("Student roster_accepted.csv", as.is=TRUE)
 N = nrow(participants)
 
 # Single machine.
@@ -15,11 +16,21 @@ N = nrow(participants)
 #d = droplet_create(name = "droplet1", size = "8gb", image = img[["id"]],
 #                   region = "nyc2")
 
+# We have to make the e-mail addresses have only A-Z, a-z, . and -.
+participants[,1] = make.names(participants[,1])
+participants[,1] = gsub("_", ".", participants[,1])
+chars = sort(unique(unlist(strsplit(participants[,1], split = ""))))
+stopifnot(chars %in% c(LETTERS, letters, 0:9, ".", "-"))
+
 # Trying new command to make multiple machines at once.
 img = images(private = TRUE)[["churchill/mdibl2016"]]
 # NOTE: You may get an error if you create more than 10 machines.  Just make
 #       multiple calls to this function and stack up the droplets.
-droplet_list = droplets_create(names = participants[,1], size = "8gb", image = img[["id"]],
+droplet_list = droplets_create(names = participants[1:10,1], size = "8gb", image = img[["id"]],
+                               region = "nyc2")
+droplet_list[11:20] = droplets_create(names = participants[11:20,1], size = "8gb", image = img[["id"]],
+                               region = "nyc2")
+droplet_list[21:25] = droplets_create(names = participants[21:25,1], size = "8gb", image = img[["id"]],
                                region = "nyc2")
 
 # start docker containers
@@ -30,7 +41,8 @@ for(i in 1:N) {
   
   # start the container.
   d %>% docklet_run("-d", " -v /data:/data", " -v /tutorial:/tutorial", " -p 8787:8787", 
-                    " -e USER=rstudio", " -e PASSWORD=mdibl ", "--name myrstudio ", "churchill/ibangs2016")
+                    " -e USER=rstudio", " -e PASSWORD=mdibl ", "--name myrstudio ", "churchill/ibangs2016") %>%
+                    droplet_wait()
 
   # add symbolic links
   lines2 <- "docker exec myrstudio ln -s /data /home/rstudio/data
@@ -38,6 +50,10 @@ for(i in 1:N) {
   cmd2 <- paste0("ssh ", analogsea:::ssh_options(), " ", "root", "@", analogsea:::droplet_ip(d)," ", shQuote(lines2))
   analogsea:::do_system(d, cmd2, verbose = TRUE)
 } # for(i)
+
+#############################################################################
+# NOTE: Didn't use the following for the course. I just sent e-mails by hand.
+#############################################################################
 
 ### Create participant table with links
 participants$DO_machine <- sapply(droplet_list, function(x) x$name)
